@@ -1,0 +1,276 @@
+---
+title: "RNA Analysis Pipeline"
+author: "Wanlu"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+   toc: true
+   theme: united
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Dependiencies
+
+* [R](https://cran.rstudio.com)
+* [Rstudio](https://posit.co/download/rstudio-desktop/)
+* [sratoolkit](https://github.com/ncbi/sra-tools/wiki)
+* [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html)
+* [fastp](https://github.com/OpenGene/fastp#or-compile-from-source)
+* [Salmon](https://combine-lab.github.io/salmon/getting_started/)
+* [GSEA](https://www.gsea-msigdb.org/gsea/index.jsp)
+
+If you are working on an Apple with M2 chip:
+
+* [Xcode](https://developer.apple.com/xcode/)
+* [gfortran](https://cran.r-project.org/bin/macosx/tools/)
+
+## 1. Download Raw Fastq File
+
+### 1.1 Download data from GEO
+
+#### 1.1.1 Download and install sratoolkit
+
+For example: I'm working on a Apple silicon M2 Mac. Then I will download the [MacOS Arm64 bit architecture](https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.10/sratoolkit.3.0.10-mac-arm64.tar.gz).
+
+```{r eval=FALSE}
+## terminal/command shell
+cd /Users/wanluchen/Documents/RNA_example_project/tool # where to put sratoolkit
+curl https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.0.10/sratoolkit.3.0.10-mac-arm64.tar.gz -o sratoolkit.tar.gz # choose compiled binary that works on your system
+tar -vxzf sratoolkit.tar.gz
+rm sratoolkit.tar.gz
+```
+
+#### 1.1.2 Get metadata
+
+![](/Users/wanluchen/Documents/RNA_example_project/insert_figure/1.png)
+![](/Users/wanluchen/Documents/RNA_example_project/insert_figure/2.png)
+
+Convert **.txt** file to **.csv** file if you want to copy columns from metadata (to make samplesheet later):
+
+```{r, file='metadata.R', eval=FALSE}
+```
+
+#### 1.1.3 Run script
+
+Refer to Appendix if you have lots of samples to download.
+
+**single-end**
+```{r eval=FALSE}
+## terminal/command shell
+bash code/directory/download_data_se.sh [SRR_Acc_Num] [output/directory] [sratoolkit/directory] [number of threads]
+```
+
+**paired-end**
+```{r eval=FALSE}
+## terminal/command shell
+bash code/directory/download_data_pe.sh [SRR_Acc_Num] [output/directory] [sratoolkit/directory] [number of threads]
+```
+
+**example**
+```{r eval=FALSE}
+## terminal/command shell
+###cd /Volumes/Wanlu/RNA_example_project
+bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR7629063 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
+```
+
+
+## 2. Remove Adapter (optional)
+
+[A study](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7671312/) suggested that RNA-seq reads do not need to be trimmed prior to mapping for the purpose of quantifying expression levels of genes. But for other purpose trimming step might be necessary or recommended.
+
+#### 2.1 Download and install fastp
+
+First install [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) into your system.
+
+Then install [fastp](https://github.com/OpenGene/fastp#or-compile-from-source):
+
+```{r eval=FALSE}
+## terminal/command shell
+conda create -n fastp
+conda activate fastp
+conda install -c bioconda fastp
+conda deactivate
+```
+
+*Note that the x86_64 architecture is required for this software. It won't run or compile on Apple M1/M2 chip.*
+
+#### 2.2 Run script
+
+Refer to Appendix if you have lots of samples to download.
+
+**single-end**
+```{r eval=FALSE}
+## terminal/command shell
+bash code/directory/trim_adapter_se.sh [Read] [SampleName] [input/directory] [output/directory]
+```
+
+**paired-end**
+```{r eval=FALSE}
+## terminal/command shell
+bash code/directory/trim_adapter_pe.sh [Read_1] [Read_2] [SampleName] [input/directory] [output/directory]
+```
+
+**example**
+```{r eval=FALSE}
+## terminal/command shell
+bash /Users/wanluchen/Documents/RNA_example_project/code/trim_adapter_pe.sh SRR7629063_1.fastq.gz SRR7629063_2.fastq.gz SRR7629063 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/data/trim_fastq
+```
+
+
+## 3. Salmon Quantification
+
+#### 3.1 Prepare software and reference genome
+
+Obtain [Salmon](https://combine-lab.github.io/salmon/getting_started/) following the instruction.
+
+Select and download reference genome data [here](http://refgenomes.databio.org). (Unzip the file you will get a folder named **default**. Please change it to the name of genome such as **hg38_salmon_index**.) FYI the pre-built versions of the partial decoy salmon indices for some common organisms:
+
+hg38: [salmon_partial_sa_index:default](http://refgenomes.databio.org/v3/assets/archive/2230c535660fb4774114bfa966a62f823fdb6d21acf138d4/salmon_partial_sa_index?tag=default)
+
+mm10: [salmon_partial_sa_index:default](http://refgenomes.databio.org/v3/assets/archive/0f10d83b1050c08dd53189986f60970b92a315aa7a16a6f1/salmon_partial_sa_index?tag=default)
+    
+There are also full decoy versions, which are more accurate but much larger and require more time quantifying.
+
+#### 3.2 Run script
+
+Refer to Appendix if you have lots of samples to download.
+
+**single-end**
+```{r eval=FALSE}
+## terminal/command shell
+bash code/directory/quantification_se.sh [Read] [SampleName] [index/directory] [input/directory] [output/directory] [number of threads]
+```
+
+**paired-end**
+```{r eval=FALSE}
+## terminal/command shell
+bash code/directory/quantification_pe.sh [Read_1] [Read_2] [SampleName] [index/directory] [input/directory] [output/directory] [number of threads]
+```
+
+**example**
+```{r eval=FALSE}
+## terminal/command shell
+bash /Users/wanluchen/Documents/RNA_example_project/code/quantification_pe.sh SRR7629063_1.fastq.gz SRR7629063_2.fastq.gz SRR7629063 /Users/wanluchen/Documents/RNA_example_project/tool/hg38_salmon_index /Users/wanluchen/Documents/RNA_example_project/data/trim_fastq /Users/wanluchen/Documents/RNA_example_project/data/quants 8
+```
+
+
+## 4. Quality Control
+
+#### 4.1 Prepare R
+
+Download [R](https://cran.rstudio.com). Install [Rstudio](https://posit.co/download/rstudio-desktop/). Open Rstudio and install packages by running the following Rscript. You only need to run it for once.
+
+```{r, file='install_packages.R', eval=FALSE}
+```
+
+#### 4.2 Prepare samplesheet
+
+Create a sample sheet in .xlsx with columns: **names**(required) **condition**(required) **quants**(required) ...(optional)
+
+* names: sample name (which will be used on figures)
+* condition: sample condition
+* quants: the name of quant files
+
+**example**
+```{r}
+library(readxl)
+samplesheet <- read_excel("/Users/wanluchen/Documents/RNA_example_project/data/samplesheet.xlsx")
+samplesheet
+```
+
+#### 4.3 Run script
+
+```{r, file='get_QC.R', eval=FALSE}
+```
+
+
+## 5. Process Data
+
+#### 5.1 Run script
+
+```{r, file='process_data.R', eval=FALSE}
+```
+
+
+## 6. Exploratory Analysis (PCA)
+
+```{r, file='plot_PCA.R', eval=FALSE}
+```
+
+
+## 7. Differential Analysis
+
+```{r, file='differential_analysis.R', eval=FALSE}
+```
+
+
+## 8. Clustering Heatmap
+
+#### 8.1 Two conditions (differential genes only)
+
+Plot significant genes or top N genes based on differential analysis results obtained from section 7.
+
+```{r, file='plot_Heatmap.R', eval=FALSE}
+```
+
+#### 8.2 More than two conditions
+
+Plot all genes from two or more conditions. And cluster genes into n groups specified by user.
+
+```{r, file='plot_ClusteringHeatmap.R', eval=FALSE}
+```
+
+## 9. GSEA
+
+#### 9.1 Download [GSEA](https://www.gsea-msigdb.org/gsea/index.jsp) software.
+
+#### 9.2 Load data obtained from differential analysis (section 7)
+
+![](/Users/wanluchen/Documents/RNA_example_project/insert_figure/load_data.png){width=30%}
+
+#### 9.3 Run GSEA
+
+![](/Users/wanluchen/Documents/RNA_example_project/insert_figure/run_gsea.png)
+
+## 10. GSVA
+
+#### 10.1 Tutorial
+
+[Manual](https://www.bioconductor.org/packages/release/bioc/vignettes/GSVA/inst/doc/GSVA.html)
+
+[Example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_03_gsva.html)
+
+#### 10.2 Run script
+
+```{r, file='GSVA.R', eval=FALSE}
+```
+
+#### 10.3 Conduct a differential expression analysis at pathway level: one vs rest
+
+```{r, file='GSVA_diff.R', eval=FALSE}
+```
+
+
+## Appendix
+
+#### Create script in a faster way
+
+**example**
+```{r}
+library(glue)
+library(readxl)
+library(magrittr)
+
+run <- read.table(file = "/Users/wanluchen/Documents/RNA_example_project/data/SRR_Acc_List.txt", header = FALSE) %>% as.list %>% unlist()
+run_file <- glue("bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh {run} /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4") ## change code here
+run_file
+```
+
+
+
