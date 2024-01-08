@@ -1,0 +1,22 @@
+{
+    "read_files": "[ /dcl02/hongkai/data/wchen/ToskaLab/SWI_SNF/RNAseq/SMARCB1_SMARCE1/data/raw_fastq/SRR10425943_1.fastq, /dcl02/hongkai/data/wchen/ToskaLab/SWI_SNF/RNAseq/SMARCB1_SMARCE1/data/raw_fastq/SRR10425943_2.fastq]",
+    "expected_format": "IU",
+    "compatible_fragment_ratio": 1.0,
+    "num_compatible_fragments": 22774735,
+    "num_assigned_fragments": 22774735,
+    "num_frags_with_concordant_consistent_mappings": 19651148,
+    "num_frags_with_inconsistent_or_orphan_mappings": 3332156,
+    "strand_mapping_bias": 0.5034138463564571,
+    "MSF": 0,
+    "OSF": 0,
+    "ISF": 9892660,
+    "MSR": 0,
+    "OSR": 0,
+    "ISR": 9758488,
+    "SF": 1761166,
+    "SR": 1570990,
+    "MU": 0,
+    "OU": 0,
+    "IU": 0,
+    "U": 0
+}

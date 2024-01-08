@@ -1,0 +1,12 @@
+{
+    "salmon_version": "1.10.1",
+    "index": "/users/wchen/tool/salmon/hg38_index/default",
+    "libType": "A",
+    "mates1": "/dcl02/hongkai/data/wchen/ToskaLab/SWI_SNF/RNAseq/SMARCB1_SMARCE1/data/raw_fastq/SRR10425944_1.fastq",
+    "mates2": "/dcl02/hongkai/data/wchen/ToskaLab/SWI_SNF/RNAseq/SMARCB1_SMARCE1/data/raw_fastq/SRR10425944_2.fastq",
+    "threads": "8",
+    "validateMappings": [],
+    "gcBias": [],
+    "output": "/dcl02/hongkai/data/wchen/ToskaLab/SWI_SNF/RNAseq/SMARCB1_SMARCE1/data/quants/SRR10425944_quant",
+    "auxDir": "aux_info"
+}
