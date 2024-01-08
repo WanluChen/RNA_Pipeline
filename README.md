@@ -1,3 +1,3 @@
 # RNA_Pipeline
 
-Please check README.html in code folder.
+Please download and check README.html.
