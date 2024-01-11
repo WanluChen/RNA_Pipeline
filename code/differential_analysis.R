@@ -71,8 +71,8 @@ length(which(resOrdered$padj < 0.05 & abs(resOrdered$log2FoldChange) > 0))
 resOrdered <- data.frame(resOrdered)
 de <- resOrdered[complete.cases(resOrdered), ] ## !!! NOTE: customize filtering here !!!
 de$diffexpressed <- "Not Significant"
-de$diffexpressed[de$log2FoldChange > 0 & de$padj < 0.1] <- glue("Up (n={n.up})")
-de$diffexpressed[de$log2FoldChange < 0 & de$padj < 0.1] <- glue("Down (n={n.down})")
+de$diffexpressed[de$log2FoldChange > 0 & de$padj < 0.05] <- glue("Up (n={n.up})")
+de$diffexpressed[de$log2FoldChange < 0 & de$padj < 0.05] <- glue("Down (n={n.down})")
 de$delabel <- NA
 p <- ggplot(data=de, aes(x=log2FoldChange, y=-log10(padj), col=diffexpressed, label=delabel)) +
   geom_point(alpha = 0.4) +

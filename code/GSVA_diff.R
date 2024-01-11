@@ -143,5 +143,5 @@ dir.create(output_path, showWarnings = FALSE, recursive = TRUE)
 
 
 res <- GSVA_diff(gse_object = gse, gene_set = "H", file_name = "Hallmark.Control_REST",
-                 show_name = T, rowname_size = 10, diff_analysis = T, adj_pval = 0.05, sample_of_interest = grep("Control", gse$condition))
+                 show_name = T, rowname_size = 10, diff_analysis = T, adj_pval = 0.25, sample_of_interest = grep("Control", gse$condition))
 summary(res) # check numbers of up/down-regulated pathways

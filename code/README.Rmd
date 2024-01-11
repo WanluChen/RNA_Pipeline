@@ -262,7 +262,7 @@ Plot all genes from two or more conditions. And cluster genes into n groups spec
 #### Create script in a faster way
 
 **example**
-```{r}
+```{r eval=FALSE}
 library(glue)
 library(readxl)
 library(magrittr)
@@ -270,6 +270,7 @@ library(magrittr)
 run <- read.table(file = "/Users/wanluchen/Documents/RNA_example_project/data/SRR_Acc_List.txt", header = FALSE) %>% as.list %>% unlist()
 run_file <- glue("bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh {run} /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4") ## change code here
 run_file
+write.table(run_file, file="/Users/wanluchen/Documents/RNA_example_project/code/download_data_batch.sh", row.names=FALSE, col.names=FALSE, quote=FALSE)
 ```
 
 

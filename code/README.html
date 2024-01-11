@@ -357,7 +357,7 @@ display: none;
 
 <h1 class="title toc-ignore">RNA Analysis Pipeline</h1>
 <h4 class="author">Wanlu</h4>
-<h4 class="date">08 January, 2024</h4>
+<h4 class="date">11 January, 2024</h4>
 
 </div>
 
@@ -780,8 +780,8 @@ length(which(resOrdered$padj &lt; 0.05 &amp; abs(resOrdered$log2FoldChange) &gt;
 resOrdered &lt;- data.frame(resOrdered)
 de &lt;- resOrdered[complete.cases(resOrdered), ] ## !!! NOTE: customize filtering here !!!
 de$diffexpressed &lt;- &quot;Not Significant&quot;
-de$diffexpressed[de$log2FoldChange &gt; 0 &amp; de$padj &lt; 0.1] &lt;- glue(&quot;Up (n={n.up})&quot;)
-de$diffexpressed[de$log2FoldChange &lt; 0 &amp; de$padj &lt; 0.1] &lt;- glue(&quot;Down (n={n.down})&quot;)
+de$diffexpressed[de$log2FoldChange &gt; 0 &amp; de$padj &lt; 0.05] &lt;- glue(&quot;Up (n={n.up})&quot;)
+de$diffexpressed[de$log2FoldChange &lt; 0 &amp; de$padj &lt; 0.05] &lt;- glue(&quot;Down (n={n.down})&quot;)
 de$delabel &lt;- NA
 p &lt;- ggplot(data=de, aes(x=log2FoldChange, y=-log10(padj), col=diffexpressed, label=delabel)) +
   geom_point(alpha = 0.4) +
@@ -840,6 +840,8 @@ ddsTxi &lt;- DESeqDataSet(gse, design = ~ condition)
 
 mode &lt;- &quot;sig&quot; ## change your parameter here
 
+#&#39; ! TO BE IMPLEMENTED
+### save gene names (match order) ########################
 if(mode == &quot;sig&quot;) {
   sig.padj &lt;- 0.05 ## change threshold here
   diff_res &lt;- read.csv(file = &quot;/Users/wanluchen/Documents/RNA_example_project/results/differential_analysis/diffRes_sg1SMARCB1_sgNTControl.csv&quot;) ## change file here
@@ -1108,7 +1110,7 @@ dir.create(output_path, showWarnings = FALSE, recursive = TRUE)
 ## examples
 GSVA(gse_object = gse, gene_set = &quot;H&quot;, file_name = &quot;Hallmark&quot;, show_name = T, rowname_size = 10)
 GSVA(gse_object = gse, gene_set = &quot;C2&quot;, file_name = &quot;C2&quot;, show_name = F)
-GSVA(gse_object = gse, gene_set = &quot;C2&quot;, sub_set = &quot;CP:REACTOME&quot;, file_name = &quot;C2 CP:REACTOME&quot;, show_name = F)</code></pre>
+GSVA(gse_object = gse, gene_set = &quot;C2&quot;, sub_set = &quot;CGP&quot;, file_name = &quot;C2_CGP&quot;, show_name = F)</code></pre>
 </div>
 <div id="conduct-a-differential-expression-analysis-at-pathway-level-one-vs-rest" class="section level4">
 <h4>10.3 Conduct a differential expression analysis at pathway level:
@@ -1258,7 +1260,7 @@ dir.create(output_path, showWarnings = FALSE, recursive = TRUE)
 
 
 res &lt;- GSVA_diff(gse_object = gse, gene_set = &quot;H&quot;, file_name = &quot;Hallmark.Control_REST&quot;,
-                 show_name = T, rowname_size = 10, diff_analysis = T, adj_pval = 0.05, sample_of_interest = grep(&quot;Control&quot;, gse$condition))
+                 show_name = T, rowname_size = 10, diff_analysis = T, adj_pval = 0.25, sample_of_interest = grep(&quot;Control&quot;, gse$condition))
 summary(res) # check numbers of up/down-regulated pathways</code></pre>
 </div>
 </div>
@@ -1273,23 +1275,8 @@ library(magrittr)
 
 run &lt;- read.table(file = &quot;/Users/wanluchen/Documents/RNA_example_project/data/SRR_Acc_List.txt&quot;, header = FALSE) %&gt;% as.list %&gt;% unlist()
 run_file &lt;- glue(&quot;bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh {run} /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4&quot;) ## change code here
-run_file</code></pre>
-<pre><code>## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425939 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425940 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425941 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425942 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425943 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425944 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425945 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425946 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425947 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425948 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425949 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425950 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425951 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425952 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425953 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4
-## bash /Users/wanluchen/Documents/RNA_example_project/code/download_data_pe.sh SRR10425954 /Users/wanluchen/Documents/RNA_example_project/data/raw_fastq /Users/wanluchen/Documents/RNA_example_project/tool/sratoolkit.3.0.10-mac-arm64 4</code></pre>
+run_file
+write.table(run_file, file=&quot;/Users/wanluchen/Documents/RNA_example_project/code/download_data_batch.sh&quot;, row.names=FALSE, col.names=FALSE, quote=FALSE)</code></pre>
 </div>
 </div>
 

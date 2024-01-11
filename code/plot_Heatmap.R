@@ -26,6 +26,8 @@ ddsTxi <- DESeqDataSet(gse, design = ~ condition)
 
 mode <- "sig" ## change your parameter here
 
+#' ! TO BE IMPLEMENTED
+### save gene names (match order) ########################
 if(mode == "sig") {
   sig.padj <- 0.05 ## change threshold here
   diff_res <- read.csv(file = "/Users/wanluchen/Documents/RNA_example_project/results/differential_analysis/diffRes_sg1SMARCB1_sgNTControl.csv") ## change file here

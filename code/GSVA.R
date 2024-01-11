@@ -115,5 +115,5 @@ dir.create(output_path, showWarnings = FALSE, recursive = TRUE)
 ## examples
 GSVA(gse_object = gse, gene_set = "H", file_name = "Hallmark", show_name = T, rowname_size = 10)
 GSVA(gse_object = gse, gene_set = "C2", file_name = "C2", show_name = F)
-GSVA(gse_object = gse, gene_set = "C2", sub_set = "CP:REACTOME", file_name = "C2 CP:REACTOME", show_name = F)
+GSVA(gse_object = gse, gene_set = "C2", sub_set = "CGP", file_name = "C2_CGP", show_name = F)
 
