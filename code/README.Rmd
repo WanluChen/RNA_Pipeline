@@ -24,6 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 * [fastp](https://github.com/OpenGene/fastp#or-compile-from-source)
 * [Salmon](https://combine-lab.github.io/salmon/getting_started/)
 * [GSEA](https://www.gsea-msigdb.org/gsea/index.jsp)
+* [XQuartz](https://www.xquartz.org)
 
 If you are working on an Apple with M2 chip:
 

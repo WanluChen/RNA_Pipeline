@@ -2,16 +2,9 @@
 ## plot_ClusteringHeatmap.R  ##
 ###############################
 
-library(GenomicAlignments)
-library(data.table)
-library(dplyr)
-library(scater)
-library(GenomicRanges)
-library(glue)
-library(magrittr)
-library(ggplot2)
 library(ComplexHeatmap)
 library(circlize)
+library(magick) ##[update Jan12] make colors look better
 library(DESeq2)
 
 gse <- readRDS("/Users/wanluchen/Documents/RNA_example_project/data/gse_object.rds")

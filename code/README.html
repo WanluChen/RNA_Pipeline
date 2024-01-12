@@ -357,7 +357,7 @@ display: none;
 
 <h1 class="title toc-ignore">RNA Analysis Pipeline</h1>
 <h4 class="author">Wanlu</h4>
-<h4 class="date">11 January, 2024</h4>
+<h4 class="date">12 January, 2024</h4>
 
 </div>
 
@@ -396,6 +396,7 @@ Clustering Heatmap</a></li>
 <li><a href="https://github.com/OpenGene/fastp#or-compile-from-source">fastp</a></li>
 <li><a href="https://combine-lab.github.io/salmon/getting_started/">Salmon</a></li>
 <li><a href="https://www.gsea-msigdb.org/gsea/index.jsp">GSEA</a></li>
+<li><a href="https://www.xquartz.org">XQuartz</a></li>
 </ul>
 <p>If you are working on an Apple with M2 chip:</p>
 <ul>
@@ -527,7 +528,8 @@ need to run it for once.</p>
 # Do you want to attempt to install these from sources? (Yes/no/cancel)
 
 cran.package.list &lt;- c(&quot;BiocManager&quot;, &quot;glue&quot;, &quot;data.table&quot;, &quot;magrittr&quot;, &quot;rjson&quot;,
-                       &quot;readxl&quot;, &quot;ggplot2&quot;, &quot;ggfortify&quot;, &quot;ggrepel&quot;, &quot;dplyr&quot;, &quot;circlize&quot;)
+                       &quot;readxl&quot;, &quot;ggplot2&quot;, &quot;ggfortify&quot;, &quot;ggrepel&quot;, &quot;dplyr&quot;, &quot;circlize&quot;,
+                       &quot;magick&quot;)
 
 for(package in cran.package.list) {
   tryCatch({
@@ -816,16 +818,10 @@ results obtained from section 7.</p>
 ## plot_Heatmap.R  ##
 #####################
 
-library(GenomicAlignments)
-library(data.table)
-library(dplyr)
-library(scater)
-library(GenomicRanges)
 library(glue)
-library(magrittr)
-library(ggplot2)
 library(ComplexHeatmap)
 library(circlize)
+library(magick) ##[update Jan12] make colors look better
 library(DESeq2)
 
 gse &lt;- readRDS(&quot;/Users/wanluchen/Documents/RNA_example_project/data/gse_object.rds&quot;)
@@ -906,16 +902,9 @@ groups specified by user.</p>
 ## plot_ClusteringHeatmap.R  ##
 ###############################
 
-library(GenomicAlignments)
-library(data.table)
-library(dplyr)
-library(scater)
-library(GenomicRanges)
-library(glue)
-library(magrittr)
-library(ggplot2)
 library(ComplexHeatmap)
 library(circlize)
+library(magick) ##[update Jan12] make colors look better
 library(DESeq2)
 
 gse &lt;- readRDS(&quot;/Users/wanluchen/Documents/RNA_example_project/data/gse_object.rds&quot;)

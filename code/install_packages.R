@@ -6,7 +6,8 @@
 # Do you want to attempt to install these from sources? (Yes/no/cancel)
 
 cran.package.list <- c("BiocManager", "glue", "data.table", "magrittr", "rjson",
-                       "readxl", "ggplot2", "ggfortify", "ggrepel", "dplyr", "circlize")
+                       "readxl", "ggplot2", "ggfortify", "ggrepel", "dplyr", "circlize",
+                       "magick")
 
 for(package in cran.package.list) {
   tryCatch({
